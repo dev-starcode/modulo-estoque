@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 
 from app.application.use_cases.shopping.create_shopping_use_case import CreateShoppingUseCase
+from app.application.use_cases.shopping.find_shopping_id_use_case import FindShoppingIdUseCase
 from app.infra.repositories.postgreSQL.shopping_repository import ShoppingRepository
 from app.infra.repositories.postgreSQL.stock_movements_repository import StockMovementsRepository
 from app.presentation.helpers.http_response_helper import http_response
@@ -16,6 +17,12 @@ router = APIRouter()
 def create_shopping(request: Request, shopping_data: ShoppingCreateSchema):
     use_case = get_use_case(request, CreateShoppingUseCase, ShoppingRepository, StockMovementsRepository)
     return http_response(use_case.execute(shopping_data.model_dump()))
+
+@router.get("/shopping/{shopping_id}", response_model=SchemaResponseHttp,
+            responses={500: {"model": SchemaResponseHttp}})
+def find_shopping_by_id(request: Request, shopping_id: str):
+    use_case = get_use_case(request, FindShoppingIdUseCase, ShoppingRepository)
+    return http_response(use_case.execute(shopping_id))
 
 # @router.get("/shoppings/", response_model=SchemaResponseHttp,
 #             responses={202: {"model": SchemaResponseHttp}, 500: {"model": SchemaResponseHttp}})

@@ -12,7 +12,6 @@ class ListProductsUseCase(UseCaseInterface):
         try:
             products = self.__repository.list_all()
 
-            # alterar depois para buscar produtos não ativos
             if not products:
                 return response_no_content(
                     "Não há produtos disponíveis",
@@ -23,5 +22,5 @@ class ListProductsUseCase(UseCaseInterface):
                 {"produtos": products}
             )
 
-        except Exception as e:
+        except:
             return response_internal_error("Erro inesperado ao listar os produtos")

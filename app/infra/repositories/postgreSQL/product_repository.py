@@ -13,7 +13,7 @@ class ProductRepository(ProductRepositoryInterface):
 
     def list_all(self) -> list[dict]:
         with self.__db.get_session() as session:
-            products_orm = session.query(ProductORM).all()
+            products_orm = session.query(ProductORM).filter_by(status="active").all()
             products = []
 
             for product in products_orm:
@@ -57,4 +57,14 @@ class ProductRepository(ProductRepositoryInterface):
                 return base
 
             except:
+                return None
+
+    def change_status_product(self, product_id: int) -> None:
+        with self.__db.get_session() as session:
+            try:
+                product = session.query(ProductORM).filter_by(product_id=product_id).one()
+                product.status = "inactive" if product.status == "active" else "active"
+                session.commit()
+                return product
+            except NoResultFound:
                 return None

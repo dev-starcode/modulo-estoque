@@ -4,6 +4,7 @@ from app.infra.models.shopping_orm import ShoppingORM
 
 
 class ShoppingRepository(ShoppingRepositoryInterface):
+
     def __init__(self, db: ConnectionDBInterface):
         self.__db = db
 
@@ -14,3 +15,10 @@ class ShoppingRepository(ShoppingRepositoryInterface):
             session.commit()
             session.refresh(model)
         return model.to_entity()
+
+    def find_by_id(self, shopping_id) -> dict:
+        with self.__db.get_session() as session:
+            model = session.query(ShoppingORM).filter_by(shopping_id=shopping_id).first()
+            if model:
+                return model.to_entity()
+            return None

@@ -13,3 +13,7 @@ class ProductRepositoryInterface(ABC):
     @abstractmethod
     def find_by_id(self, product_id: int) -> dict:
         pass
+
+    @abstractmethod
+    def change_status_product(self, product_id: int) -> dict:
+        pass
